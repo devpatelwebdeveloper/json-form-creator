@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import validator from "validator";
 import FormCreator from "./FormCreator";
+import styles from "./Form.module.scss";
 
 const Form = ({ formFields }) => {
   const [state, setState] = useState({});
   const [errors, setErrors] = useState({});
+  const [notfilled, setNotfilled] = useState({});
   const [touched, setTouched] = useState({});
+  const [formError, setFormError] = useState("");
 
   const validateCheck = (validate, value) => {
     if (!validator[validate](value)) {
@@ -70,17 +73,39 @@ const Form = ({ formFields }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    formFields.map((field) => {
-      console.log(`state[field.name]`, state[field.name]);
-      if (
-        field.required &&
-        state[field.id] === "" &&
-        state[field.id] === undefined
-      ) {
-        console.log(`${field.id} is required`);
-        setErrors({ ...errors, [field.name]: field.errorMessage });
-      }
-    });
+    // formFields.map((field) => {
+    //   if (
+    //     field.required &&
+    //     (state[field.id] === "" || state[field.id] === undefined)
+    //   ) {
+    //     setNotfilled({ ...errors, [field.id]: field.errorMessage });
+    //     setErrors({ ...errors, [field.label]: field.errorMessage });
+    //     setFormError(`${Object.keys(errors).join(", ")} is required`);
+    //     console.log(errors);
+    //   }
+    // });
+
+    // const touchValidation = Object.keys(state).reduce(
+    //   (acc, key) => {
+    //     const newTouched = { [key]: true };
+    //     const newNotFilled = { [key]: true };
+    //     return {
+    //       notFilled: {
+    //         ...acc.notFilled,
+    //         ...newNotFilled
+    //       },
+    //       touched: {
+    //         ...acc.touched,
+    //         ...newTouched
+    //       }
+    //     };
+    //   },
+    //   {
+    //     notfilled: { ...notfilled },
+    //     touched: { ...touched }
+    //   }
+    // );
+
     // validate the form
     const touchValidation = Object.keys(state).reduce(
       (acc, key) => {
@@ -96,14 +121,15 @@ const Form = ({ formFields }) => {
         touched: { ...touched }
       }
     );
+    // setNotfilled(touchValidation.notFilled);
     setTouched(touchValidation.touched);
-    console.log(`Errors`, errors);
+    console.log(`touchValidation`, touchValidation);
     if (
       Object.values(errors).length === 0 &&
       Object.values(touchValidation.touched).length === formFields.length && // all fields were touched
       Object.values(touchValidation.touched).every((t) => t === true) // every touched field is true
     ) {
-      console.log("submitted");
+      console.log(state);
     } else {
       console.log("Not Submitted");
     }
@@ -117,6 +143,11 @@ const Form = ({ formFields }) => {
     <>
       <p>Form Main</p>
       <form>
+        {/* <FormCreator
+          field={formFields}
+          fieldHandler={fieldHandler}
+          blurHandler={handleBlur}
+        /> */}
         {formFields.map((field) => {
           return (
             <React.Fragment key={field.id}>
@@ -124,12 +155,15 @@ const Form = ({ formFields }) => {
                 field={field}
                 fieldHandler={fieldHandler}
                 blurHandler={handleBlur}
+                dirty={notfilled[field.id]}
               />
             </React.Fragment>
           );
         })}
+        <div className={styles.error}>{formError}</div>
         <button onClick={handleSubmit}>Submit</button>
       </form>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </>
   );
 };

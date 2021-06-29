@@ -8,7 +8,7 @@ export default function App() {
       type: "text",
       label: "First Name",
       name: "firstName",
-      validate: "isAlphanumeric",
+      validate: "isAlpha",
       errorMessage: "Please add valid First Name",
       required: true
     },
@@ -17,8 +17,9 @@ export default function App() {
       type: "text",
       label: "Last Name",
       name: "lastName",
-      validate: "isAlphanumeric",
-      errorMessage: "Please add valid Last Name"
+      validate: "isAlpha",
+      errorMessage: "Please add valid Last Name",
+      required: true
     },
     {
       id: "email",
@@ -26,7 +27,8 @@ export default function App() {
       label: "Email",
       name: "email",
       validate: "isEmail",
-      errorMessage: "Please add valid Email address"
+      errorMessage: "Please add valid Email address",
+      required: true
     },
     {
       id: "company-name",

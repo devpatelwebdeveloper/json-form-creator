@@ -45,6 +45,22 @@ const FormCreator = ({ field, fieldHandler, blurHandler, dirty }) => {
           </select>
         </>
       );
+    case "group":
+      return (
+        <div>
+          {field.fields.map((field) => {
+            return (
+              <>
+                <FormCreator
+                  field={field}
+                  fieldHandler={fieldHandler}
+                  blurHandler={blurHandler}
+                />
+              </>
+            );
+          })}
+        </div>
+      );
     default:
       return null;
   }
